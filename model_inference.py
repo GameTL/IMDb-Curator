@@ -209,7 +209,21 @@ dummy_json = [
     }
 ]
 
+def get_movie_name_list_dummy():
+    return[
+            "Avatar",
+            "Pirates of the Caribbean: At World's End",
+            "Spectre",
+            "The Dark Knight Rises",
+            "John Carter",
+            "Spider-Man 3",
+            "Tangled",
+            "Avengers: Age of Ultron",
+        ]
+
+
 def get_movie_name_list():
+    print(df_model["Title"].values)
     return df_model["Title"].values
 
 def load_kmeans_model(model_filename):
@@ -281,10 +295,11 @@ def recommend_movies(target_movie_index, df_model, combined_features, top_n=5):
     return recommended_movies
 
 
-def get_recommended_movies(movie_name="The Avengers", top_n=10) -> dict:
+def get_recommended_movies(movie_name="The Avengers", top_n=10, rating_range=(0.0,10.0)) -> dict:
     movie_index = get_movie_index(movie_name, df_model)
     json_str1 = df_model.iloc[movie_index].to_json( indent=4)
-    json_str2 = recommend_movies(movie_index, df_model, combined_features, top_n=top_n).to_json(orient="records", indent=4)
+    json_str2 = recommend_movies(movie_index, df_model[(df_model["IMDB Rating"] >= rating_range[0]) & (df_model["IMDB Rating"] <= rating_range[1])
+], combined_features, top_n=top_n).to_json(orient="records", indent=4)
 
     # Convert JSON strings back to Python objects
     data1 = json.loads(json_str1)
@@ -295,8 +310,82 @@ def get_recommended_movies(movie_name="The Avengers", top_n=10) -> dict:
 
 
     # # Convert the combined structure back to a JSON string
-    #
     return combined_data
+# def get_recommended_movies(movie_name="The Avengers", top_n=10, rating_range=(0.0,10.0)) -> dict:
+#     movie_index = get_movie_index(movie_name, df_model)
+
+#     if movie_index is None:
+#         raise ValueError(f"Movie '{movie_name}' not found in the dataset.")
+
+#     # Apply IMDb rating filter
+#     filtered_df = df_model[(df_model["IMDB Rating"] >= rating_range[0]) & (df_model["IMDB Rating"] <= rating_range[1])]
+
+#     # Ensure there are enough movies for recommendations
+#     if len(filtered_df) < top_n + 1:
+#         if top_n > 1:
+#             return get_recommended_movies(movie_name, top_n - 1, rating_range)
+#         else:
+#             raise ValueError("Unable to find enough movies for recommendations.")
+
+#     try:
+#         # Proceed with recommendations
+#         json_str1 = df_model.iloc[movie_index].to_json(indent=4)
+#         json_str2 = recommend_movies(movie_index, filtered_df, combined_features, top_n=top_n).to_json(orient="records", indent=4)
+
+#         # Convert JSON strings back to Python objects
+#         data1 = json.loads(json_str1)
+#         data2 = json.loads(json_str2)
+
+#         # Combine the data into a single structure
+#         combined_data = [data1] + data2
+#         return combined_data
+#     except Exception as e:
+#         # If an exception occurs, try with a smaller top_n
+#         if top_n > 1:
+#             return get_recommended_movies(movie_name, top_n - 1, rating_range)
+#         else:
+#             raise ValueError("Unable to find enough movies for recommendations.")
+
+
+# def get_recommended_movies(movie_name="The Avengers", top_n=10, rating_range=(0.0,10.0)) -> dict:
+#     # Get the index of the movie
+#     movie_index = get_movie_index(movie_name, df_model)
+#     if movie_index is None:
+#         raise ValueError(f"Movie '{movie_name}' not found in the dataset.")
+
+#     # Apply IMDb rating filter
+#     filtered_df = df_model[(df_model["IMDB Rating"] >= rating_range[0]) & (df_model["IMDB Rating"] <= rating_range[1])]
+
+#     # Check if there are enough movies for recommendations
+#     if top_n <= 0 or len(filtered_df) < top_n:
+#         raise ValueError("Unable to find enough movies for recommendations.")
+
+#     try:
+#         # Proceed with recommendations
+#         json_str1 = df_model.iloc[movie_index].to_json(indent=4)
+#         recommended_movies_df = recommend_movies(movie_index, filtered_df, combined_features, top_n=top_n)
+
+#         # Check if the recommended movies dataframe is empty or the movie itself is the only one found
+#         if recommended_movies_df.empty or (len(recommended_movies_df) == 1 and recommended_movies_df.iloc[0].name == movie_index):
+#             raise ValueError("No suitable recommendations found.")
+
+#         json_str2 = recommended_movies_df.to_json(orient="records", indent=4)
+
+#         # Convert JSON strings back to Python objects
+#         data1 = json.loads(json_str1)
+#         data2 = json.loads(json_str2)
+
+#         # Combine the data into a single structure
+#         combined_data = [data1] + data2
+#         return combined_data
+#     except Exception as e:
+#         # If an exception occurs or no suitable recommendations, try with a smaller top_n
+#         return get_recommended_movies(movie_name, top_n - 1, rating_range)
+
+
+
+
+
 
 
 

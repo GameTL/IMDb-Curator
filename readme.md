@@ -7,3 +7,14 @@ With enriched data from NLP processing, such as keywords, topics, sentiment, and
 
 ### Collaborative Filtering:
 This method remains effective and can be even more powerful when combined with NLP-enhanced content data. You can use user ratings or viewing patterns in conjunction with plot-based features to find movies that similar users enjoyed or that are similar in content to movies the user likes.
+
+
+## Files 
+
+### 1Processing.ipynb
+Input: Raw IMDb Database
+Output: 
+
+IMDb Database ---> Filtered Data 
+- Movies from 1980 to 2022
+- 
