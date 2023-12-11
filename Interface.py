@@ -92,7 +92,7 @@ bncol1, bncol2, bncol3 = st.columns([1, 1,1])
 with bncol2:
     num_recommendation = st.slider(label='Number of Recommendations',min_value=1, max_value=10, value=5,step=1)
 with bncol3:
-    rating_range = st.slider(label='IMBd Rating',min_value=0.0, max_value=10.0, value=(5.0, 10.0),step=0.1) # (1.6, 10.0)
+    rating_range = st.slider(label='IMDb Rating',min_value=0.0, max_value=10.0, value=(5.0, 10.0),step=0.1) # (1.6, 10.0)
     # st.write('Values:', values)
 
 with bncol1:
